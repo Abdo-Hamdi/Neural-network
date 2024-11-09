@@ -14,20 +14,20 @@ def linearActivationFunction(f_net):
 
 
 class SingleLayerPerceptron:
-    def __init__(self, epochsNum=100, addBias=True, learningRate=1.0, misThreshold=0):
+    def __init__(self, epochsNum, addBias, learningRate, misThreshold):
         self.weights = None
         self.bias = None
-        self.epochsNum = epochsNum
-        self.learningRate = learningRate
-        self.addBias = addBias
-        self.misThreshold = misThreshold
+        self.epochsNum = int(epochsNum)
+        self.learningRate = int(learningRate)
+        self.addBias = bool(addBias)
+        self.misThreshold = bool(misThreshold)
 
     def train(self, X, Y):
         Y = np.where(Y == 0, -1, 1)
         self.weights = np.ones(X.shape[1]) * 0.001
         self.bias = 0.001 if self.addBias else 0
 
-        for epoch in range(self.epochsNum):
+        for epoch in range(int(self.epochsNum)):
             misclassify = 0
             for (data, target) in zip(X, Y):
                 F_net = np.dot(data, self.weights)
@@ -40,16 +40,17 @@ class SingleLayerPerceptron:
 
                 if error != 0:
                     misclassify += 1
+
                 self.weights += self.learningRate * error * data
                 if self.addBias:
                     self.bias += self.learningRate * error
 
-            if misclassify <= self.misThreshold:
+            if misclassify <= int(self.misThreshold):
                 break
 
 
 class AdalineAlgorithm:
-    def __init__(self, epochsNum=100, addBias=True, learningRate=0.001, mseThreshold=0.01):
+    def __init__(self, epochsNum, addBias, learningRate, mseThreshold):
         self.weights = None
         self.bias = None
         self.epochsNum = epochsNum
@@ -71,12 +72,21 @@ class AdalineAlgorithm:
                 y_predict = linearActivationFunction(F_net)
 
                 error = target - y_predict
-                total_error += error ** 2
 
                 self.weights += self.learningRate * error * data
                 if self.addBias:
                     self.bias += self.learningRate * error
 
+            for (data, target) in zip(X, Y):
+                F_net = np.dot(data, self.weights)
+                if self.addBias:
+                    F_net += self.bias
+
+                y_predict = linearActivationFunction(F_net)
+                error = target - y_predict
+                total_error += np.round(error, 4) ** 2
+
+            # print(total_error)
             mse = total_error / len(X)
             if mse <= self.mseThreshold:
                 break
@@ -192,7 +202,7 @@ class Preprocess:
 
 
 class Test:
-    def __init__(self, x_test, y_test, weights, bias, model, addBias=True):
+    def __init__(self, x_test, y_test, weights, bias, model, addBias):
         self.addBias = addBias
         self.x_test = x_test
         self.y_test = y_test
