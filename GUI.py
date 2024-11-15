@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import numpy as np
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from Pre import Preprocess, SingleLayerPerceptron, AdalineAlgorithm, Test
+
 
 class Gui(tk.Tk):
     def __init__(self):
@@ -166,9 +167,11 @@ class Gui(tk.Tk):
         self.overall_entry.delete(0, 'end')
         self.overall_entry.insert(0, str(f"{accuracy * 100 : 0.2f}%"))
         if model_type == 1:
-            self.plot.visualize_classes(x_test, y_test, model.weights, model.bias, feature_input, "Birds Dataset - Single Layer Perceptron")
+            self.plot.visualize_classes(x_test, y_test, model.weights, model.bias, feature_input,
+                                        "Birds Dataset - Single Layer Perceptron")
         elif model_type == 2:
-            self.plot.visualize_classes(x_test, y_test, model.weights, model.bias, feature_input, "Birds Dataset - Adaline Algorithm")
+            self.plot.visualize_classes(x_test, y_test, model.weights, model.bias, feature_input,
+                                        "Birds Dataset - Adaline Algorithm")
 
     def create_matrix_entries(self, parent):
         labels = [['TP', 'FP'], ['FN', 'TN']]

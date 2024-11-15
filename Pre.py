@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.utils import shuffle
 
@@ -63,7 +62,7 @@ class AdalineAlgorithm:
         self.bias = 0.001 if self.addBias else 0
 
         for epoch in range(self.epochsNum):
-            total_error = 0
+            total_error = 0.0
             for (data, target) in zip(X, Y):
                 F_net = np.dot(data, self.weights)
                 if self.addBias:
@@ -71,7 +70,7 @@ class AdalineAlgorithm:
 
                 y_predict = linearActivationFunction(F_net)
 
-                error = target - y_predict
+                error = float(target - y_predict)
 
                 self.weights += self.learningRate * error * data
                 if self.addBias:
@@ -226,17 +225,23 @@ class Test:
 
         y_pred = self.choose_model()
 
-        if self.model == 1:
-            y_pred_binary = np.where(y_pred > 0, 1, 0)
-            y_test_binary = self.y_test
-        else:
-            y_pred_binary = np.where(y_pred > 0, 1, 0)
-            y_test_binary = self.y_test
+        y_pred = np.where(y_pred > 0, 1, 0)
 
-        cm = confusion_matrix(y_test_binary, y_pred_binary)
+        tp = tn = fp = fn = 0
+        for (predict, target) in zip(y_pred, self.y_test):
+            if target == 1:
+                if predict == 1:
+                    tp += 1
+                else:
+                    fn += 1
 
-        tn, fp, fn, tp = cm.ravel()
-        accuracy = accuracy_score(y_test_binary, y_pred_binary)
+            if target == 0:
+                if predict == 0:
+                    tn += 1
+                else:
+                    fp += 1
+
+        accuracy = (tp + tn) / (tp + tn + fp + fn)
 
         print(f"\nResults:")
         print(f"Accuracy: {accuracy * 100:.2f}%")
