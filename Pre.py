@@ -17,9 +17,9 @@ class SingleLayerPerceptron:
         self.weights = None
         self.bias = None
         self.epochsNum = int(epochsNum)
-        self.learningRate = int(learningRate)
+        self.learningRate = float(learningRate)
         self.addBias = bool(addBias)
-        self.misThreshold = bool(misThreshold)
+        self.misThreshold = int(misThreshold)
 
     def train(self, X, Y):
         Y = np.where(Y == 0, -1, 1)
@@ -52,10 +52,10 @@ class AdalineAlgorithm:
     def __init__(self, epochsNum, addBias, learningRate, mseThreshold):
         self.weights = None
         self.bias = None
-        self.epochsNum = epochsNum
-        self.learningRate = learningRate
-        self.addBias = addBias
-        self.mseThreshold = mseThreshold
+        self.epochsNum = int(epochsNum)
+        self.learningRate = float(learningRate)
+        self.addBias = bool(addBias)
+        self.mseThreshold = float(mseThreshold)
 
     def train(self, X, Y):
         self.weights = np.ones(X.shape[1]) * 0.001
